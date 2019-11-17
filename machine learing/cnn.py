@@ -2,12 +2,12 @@
 # -*- encoding: utf-8 -*-
 '''
 @File    :   cnn.py    
-@Contact :   raogx.vip@hotmail.com
+@Contact :   
 @License :   (C)Copyright 2017-2018, Liugroup-NLPR-CASIA
 
 @Modify Time      @Author    @Version    @Desciption
 ------------      -------    --------    -----------
-2019/11/14 22:43   gxrao      1.0         None
+2019/11/14 22:43   Qianshui      1.0         None
 '''
 import os
 
