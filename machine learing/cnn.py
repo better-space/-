@@ -2,17 +2,18 @@
 # -*- encoding: utf-8 -*-
 '''
 @File    :   cnn.py    
-@Contact :   
+@Contact :   raogx.vip@hotmail.com
 @License :   (C)Copyright 2017-2018, Liugroup-NLPR-CASIA
 
 @Modify Time      @Author    @Version    @Desciption
 ------------      -------    --------    -----------
-2019/11/14 22:43   Qianshui      1.0         None
+2019/11/14 22:43   gxrao      1.0         None
 '''
 import os
 
 import matplotlib.image as matimage
 import numpy as np
+from PIL import Image
 
 # print("jjjj")
 
@@ -48,39 +49,43 @@ def get_image_array(src):
         image_dirs = os.listdir(folder_dir)  # 读取当前文件夹下的所有图片样本
 
         for i in range(1):
-            img_array = matimage.imread(folder_dir + f'/{image_dirs[i]}')
-            print(img_array.shape)
+            img = Image.open(folder_dir + f'/{image_dirs[i]}')
+            img = img.resize((32,32)) # 统一输入图像的规格
+            img_array = np.array(img)
+            # print(img_array.shape)
             images_array.append(np.array([img_array, one_hot_value]))
     images_array = np.array(images_array)
-    print(images_array.shape)
+    # print(images_array[0][0])
     np.random.shuffle(images_array)
     return images_array
 
-
+# 返回一个Batch大小的训练集，包含输入数据和预测结果
+# x_train_[batch_num*BATCH_SIZE*image_size],y_train_[batch_num*BATCH_SIZE*categories]
 def get_train_batch(dataset):
-    print(len(dataset))
+    # print(len(dataset))
     batch_num = int(len(dataset)/BATCH_SIZE)
-    print(batch_num)
+    # print(batch_num)
     results = []
-    for i in range(3):
+    for i in range(batch_num):
         x_train_ = dataset[:,0][i*BATCH_SIZE:(i+1)*BATCH_SIZE]
         y_train_ = dataset[:,1][i*BATCH_SIZE:(i+1)*BATCH_SIZE]
 
-        x_train_ = x_train_.reshape((BATCH_SIZE,512*512*3))
-        print(x_train_.shape,y_train_.shape)
-        # results.append(x_train_,y_train_)
+        x_train_ = [i.reshape((32*32*3)) for i in x_train_]
+        # print(y_train_[0].shape)
+        results.append([x_train_,y_train_])
         # yield
 
-    # results = np.array(results)
-    # return results[:,0],results[:,1]
+    results = np.array(results)
+    return results[:,0],results[:,1]
 
 
-src = r'C:\Users\Suhe\Desktop\Machine learning II\dataset\project4\train'
+src = r'E:\课程\研究生\Machine learning II\dataset\project4\train'
 to_one_hot()
 images_array = get_image_array(src)
-print(images_array.shape)
+# print(images_array.shape)
 # images_array = np.array(images_array)
-# x_train_,y_train_ = get_train_batch(images_array)
+x_train_,y_train_ = get_train_batch(images_array)
+print(x_train_.shape,y_train_.shape)
 # get_train_batch(images_array)
 # print(images_array[:, 1])
 # print(images_array.shape)
